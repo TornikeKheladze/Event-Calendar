@@ -1,0 +1,78 @@
+import { useState } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { RenderCalendarProps } from "./RenderCalendar";
+import { getDaysInMonth } from "../../helpers/helpers";
+
+const MonthCalendar: React.FC<RenderCalendarProps> = ({
+  onDayPress,
+  setCurrentDate,
+  currentDate,
+}) => {
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const today = new Date();
+
+  const days = getDaysInMonth(year, month);
+
+  const prevMonth = () => setCurrentDate(new Date(year, month - 1, 1));
+  const nextMonth = () => setCurrentDate(new Date(year, month + 1, 1));
+
+  return (
+    <View className="p-4 rounded-lg shadow">
+      <View className="flex flex-row justify-between items-center mb-4">
+        <TouchableOpacity onPress={prevMonth}>
+          <Text className="text-lg font-bold text-gray-600">{"<"}</Text>
+        </TouchableOpacity>
+        <Text className="text-xl font-semibold">
+          {currentDate.toLocaleString("default", {
+            month: "long",
+            year: "numeric",
+          })}
+        </Text>
+        <TouchableOpacity onPress={nextMonth}>
+          <Text className="text-lg font-bold text-gray-600">{">"}</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View className="flex flex-row justify-between">
+        {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          <Text key={day} className="w-10 text-center font-bold text-gray-700">
+            {day}
+          </Text>
+        ))}
+      </View>
+
+      <View className="flex flex-wrap flex-row">
+        {days.map((day, index) => (
+          <View key={index} className="w-[14.2%] p-1">
+            {day ? (
+              <TouchableOpacity
+                onPress={() => onDayPress(day)}
+                className={`h-10 w-10 rounded-full flex items-center justify-center 
+                  ${
+                    day.toDateString() === today.toDateString()
+                      ? "bg-blue-500 text-white"
+                      : ""
+                  }`}
+              >
+                <Text
+                  className={`text-sm ${
+                    day.toDateString() === today.toDateString()
+                      ? "text-white font-bold"
+                      : "text-gray-800"
+                  }`}
+                >
+                  {day.getDate()}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <View className="h-10 w-10" />
+            )}
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};
+
+export default MonthCalendar;
