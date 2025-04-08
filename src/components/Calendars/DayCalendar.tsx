@@ -1,5 +1,11 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { RenderCalendarProps } from "./RenderCalendar";
+import { useCallback, useRef } from "react";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetView,
+} from "@gorhom/bottom-sheet";
 
 const DayCalendar: React.FC<RenderCalendarProps> = ({
   currentDate,
@@ -19,8 +25,28 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
     setCurrentDate(new Date(currentDate.setDate(currentDate.getDate() + 1)));
   };
 
+  const bottomSheetRef = useRef<BottomSheet>(null);
+
+  const handleSheetChanges = useCallback((index: number) => {
+    console.log("handleSheetChanges", index);
+  }, []);
+
+  const handleBottomSheet = useCallback((index: number) => {
+    bottomSheetRef.current?.snapToIndex(index);
+  }, []);
+
+  const renderBackdrop = (props: BottomSheetBackdropProps) => (
+    <BottomSheetBackdrop
+      {...props}
+      appearsOnIndex={0}
+      disappearsOnIndex={-1}
+      onPress={() => handleBottomSheet(-1)}
+      style={{ backgroundColor: "transparent" }}
+    />
+  );
+
   return (
-    <View className="p-4 bg-white rounded-lg">
+    <View className="flex-1">
       <View className="flex flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={prevDay} className="p-2">
           <Text className="text-lg font-bold text-gray-600">{"<"}</Text>
@@ -37,10 +63,11 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
         </TouchableOpacity>
       </View>
 
-      <ScrollView className="mb-48">
+      <ScrollView className="mb-10 p-4">
         {hours.map((hour, index) => (
-          <View
+          <TouchableOpacity
             key={hour}
+            onPress={() => handleBottomSheet(3)}
             className={`border-b border-gray-300 py-4 px-1 ${
               currentDate.toDateString() === today.toDateString() &&
               index === today.getHours()
@@ -49,9 +76,27 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
             }`}
           >
             <Text className="text-gray-700 text-lg">{hour}</Text>
-          </View>
+          </TouchableOpacity>
         ))}
       </ScrollView>
+      <BottomSheet
+        index={-1}
+        ref={bottomSheetRef}
+        snapPoints={["30%", "50%", "90%"]}
+        onChange={handleSheetChanges}
+        backgroundStyle={{ backgroundColor: "#c7ecee" }}
+        backdropComponent={renderBackdrop}
+        enablePanDownToClose
+      >
+        <BottomSheetView className="flex-1 p-9 items-center ">
+          <TouchableOpacity
+            className="bg-blue-300 p-1 rounded-xl"
+            onPress={() => bottomSheetRef.current?.close()}
+          >
+            <Text>Close</Text>
+          </TouchableOpacity>
+        </BottomSheetView>
+      </BottomSheet>
     </View>
   );
 };
