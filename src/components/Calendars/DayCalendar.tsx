@@ -6,6 +6,8 @@ import BottomSheet, {
   BottomSheetBackdropProps,
   BottomSheetView,
 } from "@gorhom/bottom-sheet";
+import MapView, { Marker } from "react-native-maps";
+import { useLocation } from "../hooks/hooks";
 
 const DayCalendar: React.FC<RenderCalendarProps> = ({
   currentDate,
@@ -44,6 +46,8 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
       style={{ backgroundColor: "transparent" }}
     />
   );
+
+  const { location, setLocation } = useLocation();
 
   return (
     <View className="flex-1">
@@ -88,13 +92,41 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
         backdropComponent={renderBackdrop}
         enablePanDownToClose
       >
-        <BottomSheetView className="flex-1 p-9 items-center ">
+        <BottomSheetView className="flex-1 items-center">
           <TouchableOpacity
             className="bg-blue-300 p-1 rounded-xl"
             onPress={() => bottomSheetRef.current?.close()}
           >
             <Text>Close</Text>
           </TouchableOpacity>
+          {location && (
+            <MapView
+              style={{
+                width: "100%",
+                height: "80%",
+                borderRadius: 10,
+              }}
+              initialRegion={{
+                latitude: location.latitude,
+                longitude: location.longitude,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+              }}
+              onLongPress={(e) =>
+                setLocation({
+                  latitude: e.nativeEvent.coordinate.latitude,
+                  longitude: e.nativeEvent.coordinate.longitude,
+                })
+              }
+            >
+              <Marker
+                coordinate={{
+                  latitude: location.latitude,
+                  longitude: location.longitude,
+                }}
+              />
+            </MapView>
+          )}
         </BottomSheetView>
       </BottomSheet>
     </View>

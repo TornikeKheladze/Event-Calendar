@@ -21,11 +21,24 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.calendar"
+      "package": "com.anonymous.calendar",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAYdWjnfBdbkb-Y4dXUOJBcN_9U2HwyHZM"
+        }
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     }
-  }
+  },
+  "plugins": [
+    [
+      "expo-location",
+      {
+        "locationAlwaysAndWhenInUsePermission": "Allow calendar to use your location."
+      }
+    ]
+  ]
 }
