@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCurrentLocation } from "../../helpers/helpers";
+import { getCurrentLocation } from "../helpers/helpers";
 
 export const useLocation = () => {
   const [location, setLocation] = useState<{

@@ -1,18 +1,16 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { RenderCalendarProps } from "./RenderCalendar";
-import { useCallback, useRef } from "react";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetBackdropProps,
-  BottomSheetView,
-} from "@gorhom/bottom-sheet";
-import MapView, { Marker } from "react-native-maps";
-import { useLocation } from "../hooks/hooks";
+import { useCallback, useRef, useState } from "react";
+import BottomSheet from "@gorhom/bottom-sheet";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import BottomSheetComponent from "../BottomSheetComponent/BottomSheetComponent";
 
 const DayCalendar: React.FC<RenderCalendarProps> = ({
   currentDate,
   setCurrentDate,
 }) => {
+  const [currentHour, setCurrentHour] = useState<string>();
+
   const today = new Date();
   const hours = Array.from(
     { length: 24 },
@@ -29,31 +27,16 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
 
   const bottomSheetRef = useRef<BottomSheet>(null);
 
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
-
-  const handleBottomSheet = useCallback((index: number) => {
+  const handleBottomSheet = useCallback((index: number, hour: string) => {
     bottomSheetRef.current?.snapToIndex(index);
+    setCurrentHour(hour);
   }, []);
-
-  const renderBackdrop = (props: BottomSheetBackdropProps) => (
-    <BottomSheetBackdrop
-      {...props}
-      appearsOnIndex={0}
-      disappearsOnIndex={-1}
-      onPress={() => handleBottomSheet(-1)}
-      style={{ backgroundColor: "transparent" }}
-    />
-  );
-
-  const { location, setLocation } = useLocation();
 
   return (
     <View className="flex-1">
       <View className="flex flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={prevDay} className="p-2">
-          <Text className="text-lg font-bold text-gray-600">{"<"}</Text>
+          <Ionicons name="arrow-back-outline" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-xl font-semibold">
           {currentDate.toLocaleDateString("default", {
@@ -63,7 +46,7 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
           })}
         </Text>
         <TouchableOpacity onPress={nextDay} className="p-2">
-          <Text className="text-lg font-bold text-gray-600">{">"}</Text>
+          <Ionicons name="arrow-forward-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
@@ -71,7 +54,7 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
         {hours.map((hour, index) => (
           <TouchableOpacity
             key={hour}
-            onPress={() => handleBottomSheet(3)}
+            onPress={() => handleBottomSheet(3, hour)}
             className={`border-b border-gray-300 py-4 px-1 ${
               currentDate.toDateString() === today.toDateString() &&
               index === today.getHours()
@@ -83,52 +66,8 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
           </TouchableOpacity>
         ))}
       </ScrollView>
-      <BottomSheet
-        index={-1}
-        ref={bottomSheetRef}
-        snapPoints={["30%", "50%", "90%"]}
-        onChange={handleSheetChanges}
-        backgroundStyle={{ backgroundColor: "#c7ecee" }}
-        backdropComponent={renderBackdrop}
-        enablePanDownToClose
-      >
-        <BottomSheetView className="flex-1 items-center">
-          <TouchableOpacity
-            className="bg-blue-300 p-1 rounded-xl"
-            onPress={() => bottomSheetRef.current?.close()}
-          >
-            <Text>Close</Text>
-          </TouchableOpacity>
-          {location && (
-            <MapView
-              style={{
-                width: "100%",
-                height: "80%",
-                borderRadius: 10,
-              }}
-              initialRegion={{
-                latitude: location.latitude,
-                longitude: location.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              }}
-              onLongPress={(e) =>
-                setLocation({
-                  latitude: e.nativeEvent.coordinate.latitude,
-                  longitude: e.nativeEvent.coordinate.longitude,
-                })
-              }
-            >
-              <Marker
-                coordinate={{
-                  latitude: location.latitude,
-                  longitude: location.longitude,
-                }}
-              />
-            </MapView>
-          )}
-        </BottomSheetView>
-      </BottomSheet>
+
+      <BottomSheetComponent ref={bottomSheetRef} currentHour={currentHour} />
     </View>
   );
 };

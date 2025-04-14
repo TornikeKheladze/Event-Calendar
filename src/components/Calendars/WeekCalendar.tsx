@@ -1,6 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { RenderCalendarProps } from "./RenderCalendar";
 import { getWeekDays } from "../../helpers/helpers";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const WeekCalendar: React.FC<RenderCalendarProps> = ({
   onDayPress,
@@ -22,7 +23,7 @@ const WeekCalendar: React.FC<RenderCalendarProps> = ({
     <View className="p-4 bg-white rounded-lg">
       <View className="flex flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={prevWeek} className="p-2">
-          <Text className="text-lg font-bold text-gray-600">{"<"}</Text>
+          <Ionicons name="arrow-back-outline" size={24} color="black" />
         </TouchableOpacity>
         <View className="flex-row gap-2">
           <Text className="text-xl font-semibold">
@@ -40,7 +41,7 @@ const WeekCalendar: React.FC<RenderCalendarProps> = ({
           </Text>
         </View>
         <TouchableOpacity onPress={nextWeek} className="p-2">
-          <Text className="text-lg font-bold text-gray-600">{">"}</Text>
+          <Ionicons name="arrow-forward-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
 

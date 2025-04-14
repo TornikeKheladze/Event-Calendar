@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { RenderCalendarProps } from "./RenderCalendar";
 import { getDaysInMonth } from "../../helpers/helpers";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 const MonthCalendar: React.FC<RenderCalendarProps> = ({
   onDayPress,
@@ -20,7 +21,7 @@ const MonthCalendar: React.FC<RenderCalendarProps> = ({
     <View className="p-4 rounded-lg flex-1">
       <View className="flex flex-row justify-between items-center mb-4">
         <TouchableOpacity onPress={prevMonth}>
-          <Text className="text-lg font-bold text-gray-600">{"<"}</Text>
+          <Ionicons name="arrow-back-outline" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-xl font-semibold">
           {currentDate.toLocaleString("default", {
@@ -29,7 +30,7 @@ const MonthCalendar: React.FC<RenderCalendarProps> = ({
           })}
         </Text>
         <TouchableOpacity onPress={nextMonth}>
-          <Text className="text-lg font-bold text-gray-600">{">"}</Text>
+          <Ionicons name="arrow-forward-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
 
