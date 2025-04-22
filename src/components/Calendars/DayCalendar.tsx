@@ -6,8 +6,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import BottomSheetComponent from "../BottomSheetComponent/BottomSheetComponent";
 
 import { Event } from "../../types/types";
-import { getScheduledNotifications } from "../../helpers/notifications";
+import {
+  deleteAllEventNotifications,
+  getScheduledNotifications,
+} from "../../helpers/notifications";
 import { getTodayNotifications } from "../../helpers/dates";
+import HourItem from "./HourItem";
 
 const DayCalendar: React.FC<RenderCalendarProps> = ({
   currentDate,
@@ -44,19 +48,7 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
     // deleteAllEventNotifications();
   }, []);
 
-  // notifications.forEach((n) => {
-  //   const startDate = new Date(n.startDate);
-  //   const endDate = new Date(n.endDate);
-  //   const middleTime = (startDate.getTime() + endDate.getTime()) / 2;
-
-  //   console.log(startDate.toString(), endDate.toString());
-  //   console.log(new Date(middleTime).toString());
-  // });
-
-  // console.log(notifications);
-
-  // console.log(getTodayNotifications(currentDate, notifications));
-
+  const todayNotifications = getTodayNotifications(currentDate, notifications);
   return (
     <View className="flex-1">
       <View className="flex flex-row justify-between items-center mb-4  h-10">
@@ -76,21 +68,15 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
       </View>
       <ScrollView className="mb-10 p-4">
         {hours.map((hour, index) => (
-          <TouchableOpacity
+          <HourItem
             key={hour}
-            onPress={() => handleBottomSheet(3, hour)}
-            className={`border-b box-border border-gray-300 h-16 justify-center px-1 relative ${
-              currentDate.toDateString() === today.toDateString() &&
-              index === today.getHours()
-                ? "bg-blue-100"
-                : ""
-            }`}
-          >
-            {/* <View className="absolute bg-blue-500 rounded-lg w-1/2 items-center h-full bottom-0">
-              <Text className="text-white">event</Text>
-            </View> */}
-            <Text className="text-gray-700 text-lg">{hour}</Text>
-          </TouchableOpacity>
+            currentDate={currentDate}
+            today={today}
+            handleBottomSheet={handleBottomSheet}
+            hour={hour}
+            index={index}
+            todayNotifications={todayNotifications}
+          />
         ))}
       </ScrollView>
       <BottomSheetComponent

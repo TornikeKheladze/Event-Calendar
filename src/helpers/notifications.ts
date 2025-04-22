@@ -67,27 +67,17 @@ export const getScheduledNotifications: () => Promise<Event[]> = async () => {
     const data = (n.notification.data?.event as string) || "{}";
     return JSON.parse(data);
   });
-  // console.log("Scheduled Notifications:", notifications);
+  console.log("Scheduled Notifications:", notifications);
   return notifications;
-};
-
-export const currentDateHour = (hour: string, date: Date) => {
-  const initialDate = date;
-  const [hours, minutes] = hour.split(":").map(Number);
-  initialDate.setHours(hours, minutes, 0, 0);
-  return initialDate;
 };
 
 export const deleteAllEventNotifications = async () => {
   try {
-    // 1. Get all scheduled notifications using your function
     const notifications = await getScheduledNotifications();
 
-    // 3. Extract just the IDs
     const eventIds = notifications.map((notif) => notif.id!);
 
-    // 4. Cancel all event notifications
-    await notifee.cancelTriggerNotifications(eventIds);
+    await notifee.cancelTriggerNotifications();
 
     console.log(`Deleted ${eventIds.length} event notifications`);
     return { success: true, count: eventIds.length };
