@@ -10,7 +10,8 @@ import { BottomSheetMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
 import Form from "./Form/Form";
 
 type BottomSheetProps = {
-  currentHour: string | undefined;
+  currentHour: string;
+  currentDate: Date;
 };
 
 const BottomSheetComponent = forwardRef<BottomSheetMethods, BottomSheetProps>(
@@ -53,7 +54,10 @@ const BottomSheetComponent = forwardRef<BottomSheetMethods, BottomSheetProps>(
             </TouchableOpacity>
           </View>
 
-          <Form currentHour={props.currentHour} />
+          <Form
+            currentHour={props.currentHour}
+            currentDate={props.currentDate}
+          />
         </BottomSheetView>
       </BottomSheet>
     );

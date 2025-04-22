@@ -2,8 +2,7 @@ import { View, Text, TouchableOpacity, SafeAreaView } from "react-native";
 import React, { useState } from "react";
 import RenderCalendar from "../Calendars/RenderCalendar";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-export type CalendarView = "day" | "week" | "month";
+import { CalendarView } from "../../types/types";
 
 const calendarViews: CalendarView[] = ["day", "week", "month"];
 
@@ -11,7 +10,6 @@ const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const [activeCalendarView, setActiveCalendarView] =
-    // useState<CalendarView>("month");
     useState<CalendarView>("day");
 
   const onDayPress = (date: Date) => {

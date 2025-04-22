@@ -1,5 +1,4 @@
-import * as Location from "expo-location";
-import { Alert } from "react-native";
+import { Event } from "../types/types";
 
 export const getDaysInMonth = (year: number, month: number) => {
   let days = [];
@@ -39,15 +38,32 @@ export const getWeekDays = (
   });
 };
 
-export async function getCurrentLocation() {
-  let { status } = await Location.requestForegroundPermissionsAsync();
-  if (status !== "granted") {
-    Alert.alert("Permission", "Permission Denied", [{ text: "OK" }]);
-    return null;
-  }
-  const location = await Location.getCurrentPositionAsync({});
-  return {
-    latitude: location.coords.latitude,
-    longitude: location.coords.longitude,
-  };
-}
+export const getTodayNotifications = (
+  currentDate: Date,
+  notifications: Event[]
+) => {
+  const todayStart = new Date(currentDate);
+  const todayEnd = new Date(currentDate);
+  todayStart.setHours(0, 0, 0, 0);
+  todayEnd.setHours(23, 59, 59, 59);
+
+  const todayNotifications = notifications.filter((n) => {
+    const startDate = new Date(n.startDate);
+    if (
+      startDate.getTime() > todayStart.getTime() &&
+      startDate.getTime() < todayEnd.getTime()
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  return todayNotifications;
+};
+
+export const currentDateHour = (hour: string, date: Date) => {
+  const initialDate = date;
+  const [hours, minutes] = hour.split(":").map(Number);
+  initialDate.setHours(hours, minutes, 0, 0);
+  return initialDate;
+};

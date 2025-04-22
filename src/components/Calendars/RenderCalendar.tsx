@@ -1,8 +1,8 @@
 import React from "react";
-import { CalendarView } from "../Calendar/Calendar";
 import DayCalendar from "./DayCalendar";
 import MonthCalendar from "./MonthCalendar";
 import WeekCalendar from "./WeekCalendar";
+import { CalendarView } from "../../types/types";
 
 export type RenderCalendarProps = {
   type: CalendarView;

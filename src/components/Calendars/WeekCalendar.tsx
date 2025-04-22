@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
 import { RenderCalendarProps } from "./RenderCalendar";
-import { getWeekDays } from "../../helpers/helpers";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { getWeekDays } from "../../helpers/dates";
 
 const WeekCalendar: React.FC<RenderCalendarProps> = ({
   onDayPress,

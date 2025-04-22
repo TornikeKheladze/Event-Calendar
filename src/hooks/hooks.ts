@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { getCurrentLocation } from "../helpers/helpers";
+import { Location } from "../types/types";
+import { getCurrentLocation } from "../helpers/location";
 
 export const useLocation = () => {
-  const [location, setLocation] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [location, setLocation] = useState<Location | null>(null);
 
   useEffect(() => {
     getCurrentLocation()

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Platform, Text, TouchableOpacity, View } from "react-native";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { Updater } from "@tanstack/react-form";
 
 const getTimeString = (date: Date = new Date()) => {
   const hours = date.getHours().toString().padStart(2, "0");
@@ -11,26 +12,23 @@ const getTimeString = (date: Date = new Date()) => {
   return `${hours}:${minutes}`;
 };
 
-export const DatePicker: React.FC<{
+type DatePickerProps = {
   title: string;
-  initialTime?: string;
-}> = ({ title, initialTime }) => {
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  setValue: (updater: Updater<Date>) => void;
+  value: Date;
+};
+
+export const DatePicker: React.FC<DatePickerProps> = ({
+  title,
+  value,
+  setValue,
+}) => {
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    if (initialTime) {
-      const initialDate = new Date();
-      const [hours, minutes] = initialTime.split(":").map(Number);
-      initialDate.setHours(hours, minutes, 0, 0);
-      setDate(initialDate);
-    }
-  }, [initialTime]);
-
-  const onDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const onDateChange = (event: DateTimePickerEvent, selectedDate: Date) => {
     const currentDate = selectedDate;
     setShow(false);
-    setDate(currentDate);
+    setValue(currentDate);
   };
 
   const showDatepicker = () => setShow(true);
@@ -40,10 +38,9 @@ export const DatePicker: React.FC<{
       <>
         <DateTimePicker
           testID="dateTimePicker"
-          value={date || new Date()}
+          value={value}
           onChange={(event, dateTime) => {
-            onDateChange(event, dateTime);
-            // onChange(dateTime);
+            onDateChange(event, dateTime as Date);
           }}
           mode="time"
           display="default"
@@ -59,16 +56,15 @@ export const DatePicker: React.FC<{
     return (
       <>
         <Text className="text-xl p-1 bg-[#80808040] rounded-lg mb-2 w-28 text-center">
-          {getTimeString(date)}
+          {getTimeString(value)}
         </Text>
 
         {show && (
           <DateTimePicker
             testID="dateTimePicker"
-            value={date || new Date()}
+            value={value}
             onChange={(event, dateTime) => {
-              onDateChange(event, dateTime);
-              // onChange(dateTime);
+              onDateChange(event, dateTime as Date);
             }}
             mode="time"
             display="default"

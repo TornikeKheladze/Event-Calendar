@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import { RenderCalendarProps } from "./RenderCalendar";
-import { getDaysInMonth } from "../../helpers/helpers";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { getDaysInMonth } from "../../helpers/dates";
 
 const MonthCalendar: React.FC<RenderCalendarProps> = ({
   onDayPress,
