@@ -92,5 +92,20 @@ export const eventPositons = (n: Event) => {
   const topOffset = eventStartMs * pixelInMs;
   const eventHeight = eventEndMs * pixelInMs;
 
-  return { topOffset, eventHeight, rowHeight };
+  return { topOffset, eventHeight };
 };
+
+export function formatTimeRange(
+  startDate: string | Date,
+  endDate: string | Date
+): string {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  const format = (date: Date) =>
+    date.getHours().toString().padStart(2, "0") +
+    ":" +
+    date.getMinutes().toString().padStart(2, "0");
+
+  return `${format(start)}-${format(end)}`;
+}

@@ -1,5 +1,3 @@
-import * as Location from "expo-location";
-import { Alert } from "react-native";
 import notifee, {
   AndroidImportance,
   RepeatFrequency,
@@ -22,7 +20,7 @@ export async function scheduleEventNotification(event: Event) {
   await setupNotificationChannel();
 
   const triggerTime = new Date(event.startDate);
-  triggerTime.setMinutes(triggerTime.getMinutes() - 15);
+  triggerTime.setMinutes(triggerTime.getMinutes() - 2);
 
   const notificationId = `event-${event.id}`;
 

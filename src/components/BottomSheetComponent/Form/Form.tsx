@@ -1,47 +1,18 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert } from "react-native";
-import { useForm } from "@tanstack/react-form";
+import { View, Text, TextInput, TouchableOpacity } from "react-native";
 import DatePicker from "./DatePicker/DatePicker";
-import { useLocation } from "../../../hooks/hooks";
-import Map from "./Map/Map";
+import Map from "../Map/Map";
 import DropdownComponent from "./DropdownComponent/DropdownComponent";
-import { EventRepeatType } from "../../../types/types";
-import { currentDateHour } from "../../../helpers/dates";
-import { scheduleEventNotification } from "../../../helpers/notifications";
+import { BottomSheetProps } from "../BottomSheetComponent";
+import { useFormComponent } from "./useFormComponent";
 
-const repeatTypeData: {
-  label: string;
-  value: EventRepeatType;
-}[] = [
-  { label: "Single", value: "single" },
-  { label: "Day", value: "day" },
-  { label: "Week", value: "week" },
-];
+export interface FormProps extends BottomSheetProps {
+  closeBottomSheet: () => void;
+}
 
-const Form: React.FC<{ currentHour: string; currentDate: Date }> = ({
-  currentHour,
-  currentDate,
-}) => {
-  const { location, setLocation } = useLocation();
-
-  const { Field, handleSubmit } = useForm({
-    defaultValues: {
-      name: "",
-      startDate: currentDateHour(currentHour, currentDate),
-      endDate: currentDateHour(currentHour, currentDate),
-      repeatType: repeatTypeData[0].value,
-    },
-    onSubmit: async ({ value }) => {
-      const eventData = {
-        ...value,
-        location,
-        id: new Date().toTimeString(),
-      };
-      console.log(eventData);
-      await scheduleEventNotification(eventData);
-      Alert.alert("Success", "Event Created", [{ text: "OK" }]);
-    },
-  });
+const Form: React.FC<FormProps> = (props) => {
+  const { Field, location, setLocation, handleSubmit, repeatTypeData } =
+    useFormComponent(props);
 
   return (
     <View className="w-full items-center">

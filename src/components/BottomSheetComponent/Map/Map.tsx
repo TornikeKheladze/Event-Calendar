@@ -1,13 +1,13 @@
-import { View, Text } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import React from "react";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { LongPressEvent, Marker } from "react-native-maps";
 
 type MapProps = {
   location: {
     latitude: number;
     longitude: number;
   } | null;
-  setLocation: React.Dispatch<
+  setLocation?: React.Dispatch<
     React.SetStateAction<{
       latitude: number;
       longitude: number;
@@ -16,6 +16,13 @@ type MapProps = {
 };
 
 const Map: React.FC<MapProps> = ({ location, setLocation }) => {
+  const onMapLongPress = (e: LongPressEvent) => {
+    if (!setLocation) return;
+    setLocation({
+      latitude: e.nativeEvent.coordinate.latitude,
+      longitude: e.nativeEvent.coordinate.longitude,
+    });
+  };
   if (location) {
     return (
       <MapView
@@ -30,12 +37,7 @@ const Map: React.FC<MapProps> = ({ location, setLocation }) => {
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }}
-        onLongPress={(e) =>
-          setLocation({
-            latitude: e.nativeEvent.coordinate.latitude,
-            longitude: e.nativeEvent.coordinate.longitude,
-          })
-        }
+        onLongPress={(e) => onMapLongPress(e)}
       >
         <Marker coordinate={location} />
       </MapView>
@@ -43,7 +45,7 @@ const Map: React.FC<MapProps> = ({ location, setLocation }) => {
   }
   return (
     <View>
-      <Text>Something Went Wrong</Text>
+      <ActivityIndicator />
     </View>
   );
 };

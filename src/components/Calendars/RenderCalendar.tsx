@@ -1,14 +1,16 @@
 import React from "react";
-import DayCalendar from "./DayCalendar";
-import MonthCalendar from "./MonthCalendar";
-import WeekCalendar from "./WeekCalendar";
-import { CalendarView } from "../../types/types";
+import DayCalendar from "./DayCalendar/DayCalendar";
+import MonthCalendar from "./MonthCalendar/MonthCalendar";
+import WeekCalendar from "./WeekCalendar/WeekCalendar";
+import { CalendarView, Event } from "../../types/types";
 
 export type RenderCalendarProps = {
   type: CalendarView;
-  onDayPress: (arg: any) => void;
+  onDayPress: (date: Date) => void;
   currentDate: Date;
   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
+  notifications: Event[];
+  setNotifications: React.Dispatch<React.SetStateAction<Event[]>>;
 };
 
 const RenderCalendar: React.FC<RenderCalendarProps> = (props) => {
