@@ -10,8 +10,11 @@ import {
   deleteAllEventNotifications,
   getScheduledNotifications,
 } from "../../helpers/notifications";
-import { getTodayNotifications } from "../../helpers/dates";
-import HourItem from "./HourItem";
+import {
+  eventPositons,
+  getTodayNotifications,
+  rowHeight,
+} from "../../helpers/dates";
 
 const DayCalendar: React.FC<RenderCalendarProps> = ({
   currentDate,
@@ -66,17 +69,38 @@ const DayCalendar: React.FC<RenderCalendarProps> = ({
           <Ionicons name="arrow-forward-outline" size={24} color="black" />
         </TouchableOpacity>
       </View>
-      <ScrollView className="mb-10 p-4">
+      <ScrollView className="mb-10 relative">
+        {todayNotifications.map((n) => {
+          const { eventHeight, topOffset } = eventPositons(n);
+          return (
+            <View
+              key={Math.random()}
+              className="absolute bg-sky-600 right-0 rounded-lg w-2/3 items-center z-50"
+              style={{
+                height: eventHeight,
+                top: topOffset,
+              }}
+            >
+              <Text>{n.name}</Text>
+            </View>
+          );
+        })}
         {hours.map((hour, index) => (
-          <HourItem
+          <TouchableOpacity
             key={hour}
-            currentDate={currentDate}
-            today={today}
-            handleBottomSheet={handleBottomSheet}
-            hour={hour}
-            index={index}
-            todayNotifications={todayNotifications}
-          />
+            onPress={() => handleBottomSheet(3, hour)}
+            className={`border-b box-border border-gray-300 justify-center px-1 relative z-0 ${
+              currentDate.toDateString() === today.toDateString() &&
+              index === today.getHours()
+                ? "bg-blue-100"
+                : ""
+            }`}
+            style={{
+              height: rowHeight,
+            }}
+          >
+            <Text className="text-gray-700 text-lg">{hour}</Text>
+          </TouchableOpacity>
         ))}
       </ScrollView>
       <BottomSheetComponent

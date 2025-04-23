@@ -50,7 +50,7 @@ export const getTodayNotifications = (
   const todayNotifications = notifications.filter((n) => {
     const startDate = new Date(n.startDate);
     if (
-      startDate.getTime() > todayStart.getTime() &&
+      startDate.getTime() >= todayStart.getTime() &&
       startDate.getTime() < todayEnd.getTime()
     ) {
       return true;
@@ -66,4 +66,31 @@ export const currentDateHour = (hour: string, date: Date) => {
   const [hours, minutes] = hour.split(":").map(Number);
   initialDate.setHours(hours, minutes, 0, 0);
   return initialDate;
+};
+
+export function msToHoursMinutes(ms: number) {
+  const hours = Math.floor(ms / (1000 * 60 * 60));
+  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+  return { hours, minutes };
+}
+
+export const rowHeight = 64;
+
+export const eventPositons = (n: Event) => {
+  const startOfDay = new Date(n.startDate);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const oneDayInMs = 24 * 60 * 60 * 1000;
+  const fullHeight = 24 * rowHeight;
+
+  const eventStartMs = new Date(n.startDate).getTime() - startOfDay.getTime();
+  const eventEndMs =
+    new Date(n.endDate).getTime() - new Date(n.startDate).getTime();
+
+  const pixelInMs = fullHeight / oneDayInMs;
+
+  const topOffset = eventStartMs * pixelInMs;
+  const eventHeight = eventEndMs * pixelInMs;
+
+  return { topOffset, eventHeight, rowHeight };
 };
