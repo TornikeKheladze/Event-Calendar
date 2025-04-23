@@ -24,6 +24,7 @@ export async function scheduleEventNotification(event: Event) {
 
   const notificationId = `event-${event.id}`;
 
+  await notifee.requestPermission();
   const notificationConfig = {
     id: notificationId,
     title: event.name,
@@ -83,4 +84,19 @@ export const deleteAllEventNotifications = async () => {
     console.error("Failed to delete events:", error);
     return { success: false, error };
   }
+};
+
+export const checkEventOverlap = (events: Event[], event: Event) => {
+  return events.some((e) => {
+    const existingStart = new Date(e.startDate).getTime();
+    const existingEnd = new Date(e.endDate).getTime();
+    const newStart = new Date(event.startDate).getTime();
+    const newEnd = new Date(event.endDate).getTime();
+
+    return (
+      (newStart >= existingStart && newStart < existingEnd) ||
+      (newEnd > existingStart && newEnd <= existingEnd) ||
+      (newStart <= existingStart && newEnd >= existingEnd)
+    );
+  });
 };

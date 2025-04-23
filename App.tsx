@@ -15,3 +15,7 @@ export default function App() {
 //         }
 //     }
 // }
+
+//  maven {
+//             url "$rootDir/../node_modules/@notifee/react-native/android/libs"
+//         }

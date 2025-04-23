@@ -3,7 +3,10 @@ import { useForm } from "@tanstack/react-form";
 import { useLocation } from "../../../hooks/hooks";
 import { EventRepeatType } from "../../../types/types";
 import { currentDateHour } from "../../../helpers/dates";
-import { scheduleEventNotification } from "../../../helpers/notifications";
+import {
+  checkEventOverlap,
+  scheduleEventNotification,
+} from "../../../helpers/notifications";
 import { FormProps } from "./Form";
 
 const repeatTypeData: {
@@ -20,6 +23,7 @@ export const useFormComponent = ({
   currentDate,
   closeBottomSheet,
   setNotifications,
+  notifications,
 }: FormProps) => {
   const { location, setLocation } = useLocation();
 
@@ -36,12 +40,24 @@ export const useFormComponent = ({
         location,
         id: new Date().toTimeString(),
       };
-      console.log(eventData);
-      await scheduleEventNotification(eventData);
-      setNotifications((prevState) => [...prevState, eventData]);
-      Alert.alert("Success", "Event Created", [
-        { text: "OK", onPress: closeBottomSheet },
-      ]);
+      const now = new Date();
+      if (new Date(eventData.startDate) < now) {
+        Alert.alert("Error", "You can't schedule an event in the past.", [
+          { text: "Ok" },
+        ]);
+        return;
+      } else if (checkEventOverlap(notifications, eventData)) {
+        Alert.alert("Error", "An event already exists during this time.", [
+          { text: "Ok" },
+        ]);
+        return;
+      } else {
+        await scheduleEventNotification(eventData);
+        setNotifications((prevState) => [...prevState, eventData]);
+        Alert.alert("Success", "Event Created", [
+          { text: "OK", onPress: closeBottomSheet },
+        ]);
+      }
     },
   });
 

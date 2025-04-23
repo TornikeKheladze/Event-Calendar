@@ -17,6 +17,7 @@ export type BottomSheetProps = {
   details: Event | null;
   setDetails: Dispatch<SetStateAction<Event | null>>;
   setNotifications: React.Dispatch<React.SetStateAction<Event[]>>;
+  notifications: Event[];
 };
 
 const BottomSheetComponent = forwardRef<BottomSheetMethods, BottomSheetProps>(

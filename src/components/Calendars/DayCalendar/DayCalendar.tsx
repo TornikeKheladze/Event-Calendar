@@ -53,6 +53,7 @@ const DayCalendar: React.FC<RenderCalendarProps> = (props) => {
         details={details}
         setDetails={setDetails}
         setNotifications={setNotifications}
+        notifications={todayNotifications}
       />
     </View>
   );
