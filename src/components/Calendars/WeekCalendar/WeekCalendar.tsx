@@ -3,9 +3,10 @@ import { RenderCalendarProps } from "../RenderCalendar";
 import { useWeekCalendar } from "./useWeekCalendar";
 import WeekDay from "./WeekDay/WeekDay";
 import CalendarNavigator from "../CalendarNavigator/CalendarNavigator";
+import { getTodayNotifications } from "../../../helpers/dates";
 
 const WeekCalendar: React.FC<RenderCalendarProps> = (props) => {
-  const { nextWeek, prevWeek, weekDays, onDayPress, navText } =
+  const { nextWeek, prevWeek, weekDays, onDayPress, navText, notifications } =
     useWeekCalendar(props);
 
   return (
@@ -16,13 +17,18 @@ const WeekCalendar: React.FC<RenderCalendarProps> = (props) => {
         text={navText}
       />
       <ScrollView>
-        {weekDays.map((day) => (
-          <WeekDay
-            key={day.date.getTime() + Math.random()}
-            {...day}
-            onDayPress={onDayPress}
-          />
-        ))}
+        {weekDays.map((day) => {
+          const events = getTodayNotifications(day.date, notifications);
+          const eventNames = events.map((n) => n.name);
+          return (
+            <WeekDay
+              key={day.date.getTime() + Math.random()}
+              {...day}
+              onDayPress={onDayPress}
+              eventNames={eventNames}
+            />
+          );
+        })}
       </ScrollView>
     </View>
   );

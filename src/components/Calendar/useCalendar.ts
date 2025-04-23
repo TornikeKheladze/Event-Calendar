@@ -10,7 +10,7 @@ export const useCalendar = () => {
   const [notifications, setNotifications] = useState<Event[]>([]);
 
   const [activeCalendarView, setActiveCalendarView] =
-    useState<CalendarView>("day");
+    useState<CalendarView>("month");
 
   const onDayPress = (date: Date) => {
     setCurrentDate(date);

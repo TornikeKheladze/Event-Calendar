@@ -5,14 +5,21 @@ type WeekDayProps = {
   label: string;
   date: Date;
   onDayPress: (date: Date) => void;
+  eventNames: string[];
 };
 
-const WeekDay: React.FC<WeekDayProps> = ({ date, label, onDayPress }) => {
+const WeekDay: React.FC<WeekDayProps> = ({
+  date,
+  label,
+  onDayPress,
+  eventNames,
+}) => {
   const today = new Date();
+
   return (
     <TouchableOpacity
       key={date.toDateString()}
-      className="border-b border-gray-300 py-4"
+      className="border-b border-gray-300 py-4 flex-row items-center gap-3"
       onPress={() => onDayPress(date)}
     >
       <Text
@@ -24,6 +31,11 @@ const WeekDay: React.FC<WeekDayProps> = ({ date, label, onDayPress }) => {
       >
         {label}
       </Text>
+      {eventNames.map((name, index) => (
+        <Text className="bg-sky-300 p-1 rounded-lg" key={name + index}>
+          {name}
+        </Text>
+      ))}
     </TouchableOpacity>
   );
 };
