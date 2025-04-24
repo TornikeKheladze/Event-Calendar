@@ -91,6 +91,15 @@ export const checkEventOverlap = (events: Event[], event: Event) => {
     const newStart = new Date(event.startDate).getTime();
     const newEnd = new Date(event.endDate).getTime();
 
+    console.log(
+      new Date(e.startDate).toString(),
+      new Date(e.endDate).toString()
+    );
+    console.log(
+      new Date(event.startDate).toString(),
+      new Date(event.endDate).toString()
+    );
+
     return (
       (newStart >= existingStart && newStart < existingEnd) ||
       (newEnd > existingStart && newEnd <= existingEnd) ||

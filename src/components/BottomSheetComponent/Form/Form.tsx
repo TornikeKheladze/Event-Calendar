@@ -8,6 +8,7 @@ import { useFormComponent } from "./useFormComponent";
 
 export interface FormProps extends BottomSheetProps {
   closeBottomSheet: () => void;
+  setResetRef?: React.Dispatch<React.SetStateAction<(() => void) | null>>;
 }
 
 const Form: React.FC<FormProps> = (props) => {

@@ -5,10 +5,12 @@ import { EventRepeatType } from "../../../types/types";
 import { currentDateHour } from "../../../helpers/dates";
 import {
   checkEventOverlap,
+  getScheduledNotifications,
   scheduleEventNotification,
 } from "../../../helpers/notifications";
 import { FormProps } from "./Form";
 import { reverseGeocodeAsync } from "expo-location";
+import { useEffect } from "react";
 
 const repeatTypeData: {
   label: string;
@@ -25,6 +27,7 @@ export const useFormComponent = ({
   closeBottomSheet,
   setNotifications,
   notifications,
+  setResetRef,
 }: FormProps) => {
   const { location, setLocation } = useLocation();
 
@@ -52,7 +55,7 @@ export const useFormComponent = ({
       const eventData = {
         ...value,
         location,
-        id: new Date().toTimeString(),
+        id: value.name + Math.random(),
         address,
       };
       const now = new Date();
@@ -68,7 +71,9 @@ export const useFormComponent = ({
         return;
       } else {
         await scheduleEventNotification(eventData);
-        setNotifications((prevState) => [...prevState, eventData]);
+        await getScheduledNotifications().then((n) => {
+          setNotifications(n);
+        });
         Alert.alert("Success", "Event Created", [
           {
             text: "OK",
@@ -81,6 +86,12 @@ export const useFormComponent = ({
       }
     },
   });
+
+  useEffect(() => {
+    if (setResetRef) {
+      setResetRef(() => reset);
+    }
+  }, [reset]);
 
   return {
     Field,

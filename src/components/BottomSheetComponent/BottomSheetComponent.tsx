@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import React, { Dispatch, forwardRef, SetStateAction } from "react";
+import React, { Dispatch, forwardRef, SetStateAction, useState } from "react";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
@@ -23,10 +23,14 @@ export type BottomSheetProps = {
 const BottomSheetComponent = forwardRef<BottomSheetMethods, BottomSheetProps>(
   (props, ref) => {
     const { details, setDetails } = props;
+    const [resetForm, setResetForm] = useState<(() => void) | null>(null);
 
     const closeBottomSheet = () => {
       if (ref && typeof ref !== "function") {
         ref.current?.close();
+      }
+      if (resetForm) {
+        resetForm();
       }
       setDetails(null);
     };
@@ -65,7 +69,11 @@ const BottomSheetComponent = forwardRef<BottomSheetMethods, BottomSheetProps>(
           {details ? (
             <EventDetails details={details} />
           ) : (
-            <Form {...props} closeBottomSheet={closeBottomSheet} />
+            <Form
+              {...props}
+              closeBottomSheet={closeBottomSheet}
+              setResetRef={setResetForm}
+            />
           )}
         </BottomSheetView>
       </BottomSheet>
