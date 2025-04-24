@@ -14,6 +14,7 @@ const EventDetails: React.FC<{
         {formatTimeRange(details.startDate, details.endDate)}
       </Text>
       <Text className="text-lg">Repeat Type: {details.repeatType}</Text>
+      <Text className="text-lg text-center w-full">{details.address}</Text>
       <View className="w-full h-1/2">
         <Map
           location={{

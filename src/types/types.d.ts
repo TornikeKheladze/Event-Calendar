@@ -12,6 +12,7 @@ export interface Event {
   startDate: Date;
   endDate: Date;
   repeatType: EventRepeatType;
+  address: string;
 }
 
 export type CalendarView = "day" | "week" | "month";

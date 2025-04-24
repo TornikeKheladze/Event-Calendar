@@ -28,9 +28,7 @@ export async function scheduleEventNotification(event: Event) {
   const notificationConfig = {
     id: notificationId,
     title: event.name,
-    body: event.location
-      ? `At ${event.location.latitude}, ${event.location.longitude}`
-      : "Location not specified",
+    body: `At ${event.address}`,
     data: {
       event: JSON.stringify({
         ...event,

@@ -8,6 +8,7 @@ import {
   scheduleEventNotification,
 } from "../../../helpers/notifications";
 import { FormProps } from "./Form";
+import { reverseGeocodeAsync } from "expo-location";
 
 const repeatTypeData: {
   label: string;
@@ -27,7 +28,7 @@ export const useFormComponent = ({
 }: FormProps) => {
   const { location, setLocation } = useLocation();
 
-  const { Field, handleSubmit } = useForm({
+  const { Field, handleSubmit, reset } = useForm({
     defaultValues: {
       name: "",
       startDate: currentDateHour(currentHour, currentDate),
@@ -35,10 +36,24 @@ export const useFormComponent = ({
       repeatType: repeatTypeData[0].value,
     },
     onSubmit: async ({ value }) => {
+      let address = "";
+      if (location?.latitude && location?.longitude) {
+        await reverseGeocodeAsync({
+          latitude: location.latitude,
+          longitude: location.longitude,
+        }).then((res) => {
+          const data = res[0];
+          if (data) {
+            address = `${data.country || ""},${data.city || ""}
+            ,${data.street || ""} ${data.streetNumber || ""}`;
+          }
+        });
+      }
       const eventData = {
         ...value,
         location,
         id: new Date().toTimeString(),
+        address,
       };
       const now = new Date();
       if (new Date(eventData.startDate) < now) {
@@ -55,7 +70,13 @@ export const useFormComponent = ({
         await scheduleEventNotification(eventData);
         setNotifications((prevState) => [...prevState, eventData]);
         Alert.alert("Success", "Event Created", [
-          { text: "OK", onPress: closeBottomSheet },
+          {
+            text: "OK",
+            onPress: () => {
+              closeBottomSheet();
+              reset();
+            },
+          },
         ]);
       }
     },
